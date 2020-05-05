@@ -194,6 +194,10 @@ namespace Piranha.Manager.Services
 
             if (post != null)
             {
+                // Perform manager init
+                await _factory.InitDynamicManagerAsync(post,
+                    App.PostTypes.GetById(post.TypeId));
+
                 var postModel = Transform(post, isDraft);
 
                 postModel.Categories = (await _api.Posts.GetAllCategoriesAsync(post.BlogId))
@@ -450,6 +454,8 @@ namespace Piranha.Manager.Services
                 CommentCount = post.CommentCount,
                 State = post.GetState(isDraft),
                 UseBlocks = type.UseBlocks,
+                UsePrimaryImage = type.UsePrimaryImage,
+                UseExcerpt = type.UseExcerpt,
                 SelectedRoute = route == null ? null : new RouteModel
                 {
                     Title = route.Title,
